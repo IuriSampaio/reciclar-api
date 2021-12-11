@@ -1,9 +1,18 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import userController from './controllers/user'
+import auth from './middlewares/auth';
 
 const routes = Router();
 
-routes.get('/', (req: Request, res: Response) => {
-  res.send(req.url);
-});
+routes.post(userController.path, userController.store)
+  .post(userController.path + '/auth', userController.login)
 
-export default routes;
+routes.use(auth);
+
+routes.get(userController.path, userController.show)
+  .delete(userController.path + '/:sys_id', userController.delete)
+  .put(userController.path + '/:sys_id', userController.update)
+  .get(userController.path, userController.index);
+
+
+export default routes; 
